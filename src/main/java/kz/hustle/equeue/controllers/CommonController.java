@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class CommonController {
@@ -16,7 +17,9 @@ public class CommonController {
     }
 
     @GetMapping("/")
-    public String mainPage() {
+    public String mainPage(Locale locale) {
+        System.out.println("Current locale: " + locale);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // Check if the user is authenticated and has the ROLE_ADMIN authority
