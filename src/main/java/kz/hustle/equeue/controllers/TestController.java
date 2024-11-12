@@ -38,6 +38,7 @@ public class TestController {
         terminal.addToQueue();
         terminal.addToQueue();
         terminal.addToQueue();
+        terminal.addToQueue();
         //operatorManager.getOperator("operator1").callNextClient();
         //swingApp.updateLabel("Client " + operatorManager.getOperator("operator1").getCurrent() + " please proceed to window number 1");
         //operatorManager.getOperator("operator1").callCurrentClient();
