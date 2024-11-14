@@ -43,11 +43,20 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/edit-user")
-    public String showUserForm(@RequestParam(value = "id", required = false) Long id, Model model) {
-        UserDto userDto = id != null ? userService.getUserDtoById(id) : new UserDto();
+    @GetMapping("/create-user")
+    public String showUserForm(Model model) {
+        UserDto userDto = new UserDto();
+        model.addAttribute("isEditMode", false);
         model.addAttribute("user", userDto);
-        model.addAttribute("isEditMode", id != null);
+        return "create-user";
+    }
+
+    @GetMapping("/edit-user")
+    public String showUserForm(@RequestParam(value = "id") Long id, Model model) {
+        UserDto userDto = userService.getUserDtoById(id);
+        model.addAttribute("user", userDto);
+        model.addAttribute("isEditMode", true);
+        model.addAttribute("isAdmin", true);
         return "edit-user";
     }
 
@@ -69,6 +78,27 @@ public class AdminController {
         userService.saveUser(userDto);
 
         Operator operator = new Operator(userService.getUserByUsername(userDto.getUsername()), queue);
+
+        operatorManager.addOperator(operator);
+
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/save-edited-user")
+    public String saveEditedUser(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult bindingResult, Model model) {
+        User existingUser = userService.getUserById(userDto.getId());
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isEditMode", userDto.getId() != null);
+            return "edit-user";
+        }
+
+        User newUser = new User(userDto);
+        existingUser.update(newUser);
+
+        userService.saveUser(existingUser);
+
+        Operator operator = new Operator(userService.getUserByUsername(existingUser.getUsername()), queue);
 
         operatorManager.addOperator(operator);
 

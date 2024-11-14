@@ -25,6 +25,14 @@ public class User {
         this.role = role;
     }
 
+    public User(UserDto userDto) {
+        this.id = userDto.getId();
+        this.username = userDto.getUsername();
+        this.password = userDto.getPassword();
+        this.displayName = userDto.getDisplayName();
+        this.role = userDto.getRole();
+    }
+
     public Long getId() {
         return id;
     }
@@ -63,5 +71,17 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void update(User newUser) {
+        if (newUser.getPassword() != null) {
+            setPassword(newUser.getPassword());
+        }
+        if (newUser.getUsername() != null) {
+            setUsername(newUser.getUsername());
+        }
+        if (newUser.getDisplayName() != null) {
+            setDisplayName(newUser.getDisplayName());
+        }
     }
 }

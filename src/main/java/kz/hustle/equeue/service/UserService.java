@@ -66,6 +66,19 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public void updateUser(UserDto newUser, UserDto user) {
+        if (newUser.getPassword() != null) {
+            user.setPassword(newUser.getPassword());
+        }
+        if (newUser.getUsername() !=null) {
+            user.setUsername(newUser.getUsername());
+        }
+        if (newUser.getDisplayName() != null) {
+            user.setDisplayName(newUser.getDisplayName());
+        }
+        saveUser(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
