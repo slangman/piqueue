@@ -105,6 +105,8 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @PostMapping("/save-user-password")
+
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         if (userService.deleteUser(id)) {

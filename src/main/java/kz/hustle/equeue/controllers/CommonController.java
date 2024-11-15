@@ -77,6 +77,12 @@ public class CommonController {
         return "edit-user"; // Return the template name for profile edit form
     }
 
+    /*
+    public String showChangePasswordForm(Model model) {
+
+    }
+    */
+
     @PostMapping("/save-edited-user")
     public String saveEditedUser(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult bindingResult, Model model) {
         User existingUser = userService.getUserById(userDto.getId());
