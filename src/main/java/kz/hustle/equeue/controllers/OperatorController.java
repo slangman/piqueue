@@ -64,11 +64,6 @@ public class OperatorController {
         return "redirect:/operator";
     }
 
-    @GetMapping("/edit-self")
-    public String editSelf() {
-        return "edit-self";
-    }
-
     private void displayNotification(Operator operator) {
         swingApp.updateLabel("Клиент " + operatorManager.getOperator(operator.getId()).getCurrent() + ", окно " + operator.getDisplayName());
     }
