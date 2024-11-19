@@ -2,3 +2,7 @@
         color: inherit;          /* Inherit the h1 color */
         text-decoration: none;   /* Remove underline */
 }
+
+.d-none {
+    display: none;
+}

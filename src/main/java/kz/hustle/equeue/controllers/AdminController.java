@@ -1,10 +1,7 @@
 package kz.hustle.equeue.controllers;
 
-import kz.hustle.equeue.entity.HustleQueue;
+import kz.hustle.equeue.entity.*;
 import kz.hustle.equeue.OperatorManager;
-import kz.hustle.equeue.entity.Operator;
-import kz.hustle.equeue.entity.User;
-import kz.hustle.equeue.entity.UserDto;
 import kz.hustle.equeue.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -55,6 +54,7 @@ public class AdminController {
     public String showUserForm(@RequestParam(value = "id") Long id, Model model) {
         UserDto userDto = userService.getUserDtoById(id);
         model.addAttribute("user", userDto);
+        model.addAttribute("passwordUpdate", new PasswordUpdateDto(userDto.getId()));
         model.addAttribute("isEditMode", true);
         model.addAttribute("isAdmin", true);
         return "edit-user";
@@ -105,7 +105,26 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @PostMapping("/save-user-password")
+    @PostMapping("/update-user-password")
+    public String updateUserPassword(@ModelAttribute PasswordUpdateDto passwordUpdate,
+                                     RedirectAttributes redirectAttributes,
+                                     Model model) {
+        Long userId = passwordUpdate.getUserId();
+        User user = userService.getUserById(userId);
+
+        // Validate that new password matches confirmation
+        if (!passwordUpdate.getNewPassword().equals(passwordUpdate.getConfirmNewPassword())) {
+            redirectAttributes.addFlashAttribute("error", "New passwords do not match.");
+            return "redirect:/admin/edit-user?id=" + userId;
+        }
+
+        // Update the user's password
+        user.setPassword(passwordEncoder.encode(passwordUpdate.getNewPassword()));
+        userService.saveUser(user);
+
+        redirectAttributes.addFlashAttribute("success", "Password updated successfully.");
+        return "redirect:/admin/edit-user?id=" + userId;
+    }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {

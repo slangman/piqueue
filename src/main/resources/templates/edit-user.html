@@ -68,35 +68,48 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="profile.change_password">Change password</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="profile.change_password">Update password</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="${isAdmin} ? @{/admin/save-user-password} : @{/save-password}" th:object="${user}" method="post">
-                        <div class="mb-3">
+                    <form th:action="${isAdmin} ? @{/admin/update-user-password} : @{/update-password}" th:object="${passwordUpdate}" method="post">
+                        <input type="hidden" name="userId" th:value="${passwordUpdate.userId}">
+                        <div th:unless="${isAdmin}" class="mb-3">
                             <label for="current-password" class="col-form-label" th:text="#{profile.current_password}">Current Password</label>
-                            <input type="password" class="form-control" id="current-password">
+                            <input type = password class="form-control" id="current-password" th:field="*{currentPassword}">
                         </div>
                         <div class="mb-3">
                             <label for="new-password" class="col-form-label" th:text="#{profile.new_password}">New Password</label>
-                            <input type="password" class="form-control" id="new-password">
+                            <input type="password" class="form-control" id="new-password" th:field="*{newPassword}">
                         </div>
                         <div class="mb-3">
                             <label for="confirm-new-password" class="col-form-label" th:text="#{profile.confirm_new_password}">Confirm New Password</label>
-                            <input type="password" class="form-control" id="confirm-new-password">
+                            <input type="password" class="form-control" id="confirm-new-password" th:field="*{confirmNewPassword}">
                         </div>
-                        <button class="btn btn-primary" type="submit" th:text="#{common.save}">Save</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button class="btn btn-primary" type="submit" th:text="#{common.save}">Save</button>
+                        </div>
+
                     </form>
+                    <!--
+                    <div th:if="${#fields.hasErrors('*')}">
+                        <p th:each="error : ${#fields.errors('*')}" th:text="${error}"></p>
+                    </div>
+                    <div th:if="${error}">
+                        <p th:text="${error}"></p>
+                    </div>
+                    <div th:if="${success}">
+                        <p th:text="${sucess}"></p>
+                    </div>
+                    -->
                 </div>
-                <!--
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{common.close}">Close</button>
-                    <button type="button" class="btn btn-primary" th:text="#{common.save_changes}">Save changes</button>
-                </div>
-                -->
             </div>
         </div>
     </div>
+
+    <div th:if="${error}" class="alert alert-danger mt-3" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success mt-3" th:text="${success}"></div>
 
 </div>
 
