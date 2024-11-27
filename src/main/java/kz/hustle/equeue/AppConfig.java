@@ -1,6 +1,7 @@
 package kz.hustle.equeue;
 
 import kz.hustle.equeue.entity.HustleQueue;
+import kz.hustle.equeue.entity.HustleQueueEntity;
 import kz.hustle.equeue.entity.Operator;
 import kz.hustle.equeue.entity.Terminal;
 import kz.hustle.equeue.service.UserService;
@@ -14,18 +15,22 @@ public class AppConfig {
     @Autowired
     UserService userService;
 
+    /*
     @Bean
-    public HustleQueue queue() {
-        return new HustleQueue();
+    public HustleQueueEntity queue() {
+        return new HustleQueueEntity();
     }
+     */
 
     @Bean
-    public Terminal terminal(HustleQueue queue) {
-        return new Terminal("Terminal 1", queue);
+    public Terminal terminal() {
+        return new Terminal("Terminal 1");
     }
 
+
+    /*
     @Bean
-    public OperatorManager operatorManager(HustleQueue queue) {
+    public OperatorManager operatorManager(HustleQueueEntity queue) {
         OperatorManager operatorManager = new OperatorManager();
 
         userService.getAllUsers().forEach(user -> {
@@ -35,6 +40,7 @@ public class AppConfig {
 
         return operatorManager;
     }
+     */
 
     @Bean
     public SwingApp swingApp() {

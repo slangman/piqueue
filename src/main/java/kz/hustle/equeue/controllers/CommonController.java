@@ -2,6 +2,7 @@ package kz.hustle.equeue.controllers;
 
 import kz.hustle.equeue.OperatorManager;
 import kz.hustle.equeue.entity.*;
+import kz.hustle.equeue.service.OperatorService;
 import kz.hustle.equeue.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,10 +30,7 @@ public class CommonController {
     private UserService userService;
 
     @Autowired
-    private OperatorManager operatorManager;
-
-    @Autowired
-    private HustleQueue queue;
+    private OperatorService operatorService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -126,9 +124,9 @@ public class CommonController {
         userService.saveUser(existingUser);
 
         if (existingUser.getRole().equalsIgnoreCase("USER")) {
-            Operator operator = new Operator(userService.getUserByUsername(existingUser.getUsername()), queue);
+            Operator operator = new Operator(userService.getUserByUsername(existingUser.getUsername()));
 
-            operatorManager.addOperator(operator);
+            operatorService.saveOperator(operator);
         }
 
         return "redirect:/";

@@ -9,7 +9,7 @@ public class OperatorManager {
     private final Map<Long, Operator> operators = new HashMap<>();
 
     public void addOperator(Operator operator) {
-        operators.put(operator.getId(), operator);
+        operators.put(operator.getUser().getId(), operator);
     }
 
     public Operator getOperator(Long id) {

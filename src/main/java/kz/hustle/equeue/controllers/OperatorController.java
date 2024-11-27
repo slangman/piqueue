@@ -3,8 +3,11 @@ package kz.hustle.equeue.controllers;
 import kz.hustle.equeue.entity.HustleQueue;
 import kz.hustle.equeue.OperatorManager;
 import kz.hustle.equeue.SwingApp;
+import kz.hustle.equeue.entity.HustleQueueEntity;
 import kz.hustle.equeue.entity.Terminal;
 import kz.hustle.equeue.entity.Operator;
+import kz.hustle.equeue.service.HustleQueueService;
+import kz.hustle.equeue.service.OperatorService;
 import kz.hustle.equeue.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,17 +24,16 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @RequestMapping("/operator")
 public class OperatorController {
 
-    private final HustleQueue queue;
+    //private final HustleQueueService queueService;
     private final Terminal terminal;
-    private final OperatorManager operatorManager;
+    private final OperatorService operatorService;
     private final SwingApp swingApp;
     private final UserService userService;
 
     @Autowired
-    public OperatorController(HustleQueue queue, Terminal terminal, OperatorManager operatorManager, SwingApp swingApp, UserService userService) {
-        this.queue = queue;
+    public OperatorController(Terminal terminal, OperatorService operatorService, SwingApp swingApp, UserService userService) {
         this.terminal = terminal;
-        this.operatorManager = operatorManager;
+        this.operatorService = operatorService;
         this.swingApp = swingApp;
         this.userService = userService;
     }
@@ -39,15 +41,15 @@ public class OperatorController {
     @GetMapping
     public String operator(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         //this.operator = operatorManager.getOperator(userService.getUserByUsername(userDetails.getUsername()).getId());
-        model.addAttribute("operator", operatorManager.getOperator(userService.getUserByUsername(userDetails.getUsername()).getId()));
+        model.addAttribute("operator", operatorService.getOperatorByUserId(userService.getUserByUsername(userDetails.getUsername()).getId()));
         return "operator";
     }
 
     @GetMapping("/call-next")
     public String callNext(@ModelAttribute("operator") Operator operator) {
-        ;
-        operatorManager.getOperator(operator.getId()).callNextClient();
-        Integer current = operatorManager.getOperator(operator.getId()).getCurrent();
+        //Long userId = operator.getUser().getId();
+        operatorService.callNextClient(operator);
+        Integer current = operatorService.getOperator(operator.getId()).getCurrent();
         if (current != null) {
             displayNotification(operator);
         }
@@ -56,8 +58,9 @@ public class OperatorController {
 
     @GetMapping("/call-current")
     public String callCurrent(@ModelAttribute("operator") Operator operator) {
-        operatorManager.getOperator(operator.getId()).callCurrentClient();
-        Integer current = operatorManager.getOperator(operator.getId()).getCurrent();
+        Long userId = operator.getUser().getId();
+        operatorService.callCurrentClient(operator);
+        Integer current = operatorService.getOperator(operator.getId()).getCurrent();
         if (current != null) {
             displayNotification(operator);
         }
@@ -65,6 +68,6 @@ public class OperatorController {
     }
 
     private void displayNotification(Operator operator) {
-        swingApp.updateLabel("Клиент " + operatorManager.getOperator(operator.getId()).getCurrent() + ", окно " + operator.getDisplayName());
+        swingApp.updateLabel("Клиент " + operator.getCurrent() + ", окно " + operator.getUser().getDisplayName());
     }
 }

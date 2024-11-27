@@ -1,6 +1,6 @@
 package kz.hustle.equeue.service;
 
-import kz.hustle.equeue.db.UserRepository;
+import kz.hustle.equeue.repository.UserRepository;
 import kz.hustle.equeue.entity.User;
 import kz.hustle.equeue.entity.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;

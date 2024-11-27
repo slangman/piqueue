@@ -1,17 +1,14 @@
 package kz.hustle.equeue.entity;
 
+import org.springframework.stereotype.Component;
+
 public class Terminal {
 
     private String name;
-    private HustleQueue queue;
 
-    public Terminal(String name, HustleQueue queue) {
+    public Terminal(String name) {
         this.name = name;
-        this.queue = queue;
     }
 
-    public void addToQueue() {
-        int clientNumber =  queue.addToQueue();
-        System.out.println("Client with number " + clientNumber + " added to the queue.");
-    }
+
 }

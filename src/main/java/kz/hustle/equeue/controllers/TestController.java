@@ -3,6 +3,8 @@ package kz.hustle.equeue.controllers;
 import kz.hustle.equeue.*;
 import kz.hustle.equeue.entity.HustleQueue;
 import kz.hustle.equeue.entity.Terminal;
+import kz.hustle.equeue.service.OperatorService;
+import kz.hustle.equeue.service.TerminalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -14,16 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 //@RequestMapping("/test")
 public class TestController {
 
-    private final HustleQueue queue;
-    private final Terminal terminal;
-    private final OperatorManager operatorManager;
+    private final TerminalService terminalService;
+    private final OperatorService operatorService;
     private final SwingApp swingApp;
 
     @Autowired
-    public TestController(HustleQueue queue, Terminal terminal, OperatorManager operatorManager, SwingApp swingApp) {
-        this.queue = queue;
-        this.terminal = terminal;
-        this.operatorManager = operatorManager;
+    public TestController(TerminalService terminalService, OperatorService operatorService, SwingApp swingApp) {
+        this.terminalService = terminalService;
+        this.operatorService = operatorService;
         this.swingApp = swingApp;
     }
 
@@ -34,10 +34,10 @@ public class TestController {
 
     @GetMapping("/test")
     public ResponseEntity<String> testClientCall() {
-        terminal.addToQueue();
-        terminal.addToQueue();
-        terminal.addToQueue();
-        terminal.addToQueue();
+        terminalService.addToQueue();
+        terminalService.addToQueue();
+        terminalService.addToQueue();
+        terminalService.addToQueue();
         //operatorManager.getOperator("operator1").callNextClient();
         //swingApp.updateLabel("Client " + operatorManager.getOperator("operator1").getCurrent() + " please proceed to window number 1");
         //operatorManager.getOperator("operator1").callCurrentClient();

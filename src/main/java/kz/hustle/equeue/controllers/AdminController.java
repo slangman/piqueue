@@ -2,6 +2,7 @@ package kz.hustle.equeue.controllers;
 
 import kz.hustle.equeue.entity.*;
 import kz.hustle.equeue.OperatorManager;
+import kz.hustle.equeue.service.OperatorService;
 import kz.hustle.equeue.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,7 @@ public class AdminController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private OperatorManager operatorManager;
-
-    @Autowired
-    private HustleQueue queue;
+    private OperatorService operatorService;
 
     public AdminController(UserService userService) {
         this.userService = userService;
@@ -77,9 +75,9 @@ public class AdminController {
 
         userService.saveUser(userDto);
 
-        Operator operator = new Operator(userService.getUserByUsername(userDto.getUsername()), queue);
+        Operator operator = new Operator(userService.getUserByUsername(userDto.getUsername()));
 
-        operatorManager.addOperator(operator);
+        operatorService.saveOperator(operator);
 
         return "redirect:/admin";
     }
@@ -98,9 +96,9 @@ public class AdminController {
 
         userService.saveUser(existingUser);
 
-        Operator operator = new Operator(userService.getUserByUsername(existingUser.getUsername()), queue);
+        Operator operator = new Operator(userService.getUserByUsername(existingUser.getUsername()));
 
-        operatorManager.addOperator(operator);
+        operatorService.saveOperator(operator);
 
         return "redirect:/admin";
     }
