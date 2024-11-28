@@ -11,11 +11,13 @@ import java.util.Optional;
 @Service
 public class OperatorService {
 
-    @Autowired
-    private OperatorRepository operatorRepository;
+    private final OperatorRepository operatorRepository;
+    private final HustleQueueService queueService;
 
-    @Autowired
-    private HustleQueueService queueService;
+    public OperatorService(OperatorRepository operatorRepository, HustleQueueService queueService) {
+        this.operatorRepository = operatorRepository;
+        this.queueService = queueService;
+    }
 
     public Operator saveOperator(Operator operator) {
         return operatorRepository.save(operator);

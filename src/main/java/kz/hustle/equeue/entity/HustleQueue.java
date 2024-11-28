@@ -12,6 +12,12 @@ public class HustleQueue {
     @Column(nullable = false)
     private Integer position;
 
+    public HustleQueue() {}
+
+    public HustleQueue(Integer position) {
+        this.position = position;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,7 +1,4 @@
-package kz.hustle.equeue;
-
-import kz.hustle.equeue.service.UserService;
-import org.junit.jupiter.api.BeforeAll;
+package kz.hustle.equeue.service;
 
 
 public class UserServiceTest {
