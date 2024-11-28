@@ -1,37 +1,30 @@
 package kz.hustle.equeue.entity;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
-@Component
+@Entity
+@Table(name = "queue")
 public class HustleQueue {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final List<Integer> queue;
-    private final AtomicInteger current;
+    @Column(nullable = false)
+    private Integer position;
 
-    public HustleQueue() {
-        this.queue = Collections.synchronizedList(new ArrayList<>());
-        this.current = new AtomicInteger(0);
+    public Long getId() {
+        return id;
     }
 
-    public int addToQueue() {
-        int position = 1;
-        if (!queue.isEmpty()) {
-            position = queue.get(queue.size()-1) + 1;
-        }
-        queue.add(position);
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getPosition() {
         return position;
     }
 
-    public Integer getNext() {
-        if (queue.size() > current.get()) {
-            return queue.get(current.getAndIncrement());
-        } else {
-            return null;
-        }
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }

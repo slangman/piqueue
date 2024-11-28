@@ -1,10 +1,8 @@
 package kz.hustle.equeue.controllers;
 
-import kz.hustle.equeue.OperatorManager;
 import kz.hustle.equeue.entity.*;
 import kz.hustle.equeue.service.OperatorService;
 import kz.hustle.equeue.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,20 +18,22 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
 import java.util.Locale;
 
 @Controller
 public class CommonController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private OperatorService operatorService;
+    private final OperatorService operatorService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public CommonController(UserService userService, OperatorService operatorService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.operatorService = operatorService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @GetMapping("/login")
     public String redirectToMain() {
@@ -77,7 +77,7 @@ public class CommonController {
         model.addAttribute("isEditMode", true);
         model.addAttribute("user", currentUser);
         model.addAttribute("passwordUpdate", new PasswordUpdateDto());
-        return "edit-user"; // Return the template name for profile edit form
+        return "edit-user";
     }
 
 
@@ -108,7 +108,6 @@ public class CommonController {
     }
 
 
-
     @PostMapping("/save-edited-user")
     public String saveEditedUser(@Valid @ModelAttribute("userDto") UserDto userDto, BindingResult bindingResult, Model model) {
         User existingUser = userService.getUserById(userDto.getId());
@@ -131,6 +130,5 @@ public class CommonController {
 
         return "redirect:/";
     }
-
 
 }

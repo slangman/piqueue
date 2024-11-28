@@ -17,7 +17,7 @@ public class TerminalService {
     }
 
     public void addToQueue() {
-        int clientNumber =  queueService.addToQueue();
+        int clientNumber = queueService.addToQueue();
         System.out.println("Client with number " + clientNumber + " added to the queue.");
     }
 }

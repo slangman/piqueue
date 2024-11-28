@@ -1,19 +1,15 @@
 package kz.hustle.equeue.controllers;
 
 import kz.hustle.equeue.*;
-import kz.hustle.equeue.entity.HustleQueue;
-import kz.hustle.equeue.entity.Terminal;
 import kz.hustle.equeue.service.OperatorService;
 import kz.hustle.equeue.service.TerminalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@RequestMapping("/test")
 public class TestController {
 
     private final TerminalService terminalService;

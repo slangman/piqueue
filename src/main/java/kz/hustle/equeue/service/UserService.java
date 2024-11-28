@@ -70,7 +70,7 @@ public class UserService implements UserDetailsService {
         if (newUser.getPassword() != null) {
             user.setPassword(newUser.getPassword());
         }
-        if (newUser.getUsername() !=null) {
+        if (newUser.getUsername() != null) {
             user.setUsername(newUser.getUsername());
         }
         if (newUser.getDisplayName() != null) {

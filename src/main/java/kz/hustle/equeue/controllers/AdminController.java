@@ -1,10 +1,8 @@
 package kz.hustle.equeue.controllers;
 
 import kz.hustle.equeue.entity.*;
-import kz.hustle.equeue.OperatorManager;
 import kz.hustle.equeue.service.OperatorService;
 import kz.hustle.equeue.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -23,14 +20,14 @@ public class AdminController {
 
     private final UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private OperatorService operatorService;
+    private final OperatorService operatorService;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, PasswordEncoder passwordEncoder, OperatorService operatorService) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+        this.operatorService = operatorService;
     }
 
     @GetMapping

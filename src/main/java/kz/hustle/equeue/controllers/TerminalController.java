@@ -1,23 +1,18 @@
 package kz.hustle.equeue.controllers;
 
-import kz.hustle.equeue.entity.HustleQueue;
 import kz.hustle.equeue.SwingApp;
-import kz.hustle.equeue.entity.Terminal;
-import org.springframework.beans.factory.annotation.Autowired;
+import kz.hustle.equeue.service.TerminalService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class TerminalController {
 
-    private final HustleQueue queue;
-    private final Terminal terminal;
+    private final TerminalService terminalService;
     private final SwingApp swingApp;
 
-    @Autowired
-    public TerminalController(HustleQueue queue, Terminal terminal, SwingApp swingApp) {
-        this.queue = queue;
-        this.terminal = terminal;
+    public TerminalController(TerminalService terminalService, SwingApp swingApp) {
+        this.terminalService = terminalService;
         this.swingApp = swingApp;
     }
 
@@ -28,7 +23,7 @@ public class TerminalController {
 
     @GetMapping("/terminal/queue-add")
     public String addToQueue() {
-        queue.addToQueue();
+        terminalService.addToQueue();
         return "terminal";
     }
 }
