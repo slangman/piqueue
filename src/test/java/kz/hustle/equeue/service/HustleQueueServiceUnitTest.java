@@ -62,8 +62,8 @@ public class HustleQueueServiceUnitTest {
         hustleQueueService.addToQueue();
 
         // Assert
-        verify(repository,times(1)).findAll();
-        verify(repository,times(1)).save(any(HustleQueue.class));
+        verify(repository, times(1)).findAll();
+        verify(repository, times(1)).save(any(HustleQueue.class));
     }
 
 

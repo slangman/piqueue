@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests((requests) -> requests
                         .antMatchers("/", "/login", "/logout", "/css/**", "/js/**").permitAll()
-                        .antMatchers("/favicon.ico").permitAll()
+                        .antMatchers("/favicon.ico", "/images/**").permitAll()
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .antMatchers("/operator/**").hasRole("USER")
                         .anyRequest().authenticated()  // All other requests require authentication

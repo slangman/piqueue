@@ -17,6 +17,18 @@
             <p class="lead text-left" th:text="#{profile.page_title} + ' | ' + ${user.username}">Profile</p>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
+            <div class="d-inline block">
+                <div class="dropdown bd-mode-toggle">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="languageDropdown">
+                        <label th:text="#{common.current_language}"></label>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <li><a class="dropdown-item" href="?lang=kz">Қазақ <img th:src="@{/images/lang_kz.png}" width="24" height="24"></a></li>
+                        <li><a class="dropdown-item" href="?lang=ru">Русский <img th:src="@{/images/lang_ru.png}" width="24" height="24"></a></li>
+                        <li><a class="dropdown-item" href="?lang=en">English <img th:src="@{/images/lang_en.png}" width="24" height="24"></a></li>
+                    </ul>
+                </div>
+            </div>
             <div class="d-inline-block p-1">
                 <!--<a href="/profile">Admin</a>-->
                 <a class="btn btn-sm btn-outline-secondary"
