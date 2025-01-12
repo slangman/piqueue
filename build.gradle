@@ -1,5 +1,6 @@
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
     id 'java'
@@ -15,7 +16,25 @@ version = "1.0-SNAPSHOT-${currentDate}"
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://nrgxnat.jfrog.io/artifactory/libs-release/")
+    }
+    maven {
+        url = uri("https://raw.githubusercontent.com/DFKI-MLT/Maven-Repository/main/")
+    }
+    maven {
+        url = uri("https://nexus.terrestris.de/repository/public/")
+    }
+    maven {
+        url = uri("https://repo.spring.io/plugins-release/")
+    }
+    maven {
+        url = uri("https://repo.gradle.org/gradle/libs-releases/")
+    }
 }
+
+// Define the URL of the ZIP file in GitHub releases
+def maryttsHenryVoiceReleaseUrl = "https://github.com/marytts/voice-cmu-rms-hsmm/releases/download/v5.2/voice-cmu-rms-hsmm-5.2.zip"
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -25,6 +44,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.springframework.boot:spring-boot-devtools'
+    //text-to-speech-start
+    implementation ('de.dfki.mary:voice-cmu-slt-hsmm:5.2.1') {
+        exclude group: 'org.apache.logging.log4j'
+    }
+    implementation files('lib/voice-cmu-rms-hsmm-5.2.jar')
+    implementation files('lib/voice-dfki-poppy-hsmm-5.2.jar')
+    //test-to-speech-end
     implementation 'com.h2database:h2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'javax.validation:validation-api:2.0.1.Final'

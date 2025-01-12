@@ -2,6 +2,7 @@ package kz.hustle.equeue.controllers;
 
 import kz.hustle.equeue.entity.*;
 import kz.hustle.equeue.service.OperatorService;
+import kz.hustle.equeue.service.TTSSettingsService;
 import kz.hustle.equeue.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,16 +26,24 @@ public class AdminController {
 
     private final OperatorService operatorService;
 
-    public AdminController(UserService userService, PasswordEncoder passwordEncoder, OperatorService operatorService) {
+    private final TTSSettingsService ttsSettingsService;
+
+    public AdminController(UserService userService,
+                           PasswordEncoder passwordEncoder,
+                           OperatorService operatorService,
+                           TTSSettingsService ttsSettingsService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.operatorService = operatorService;
+        this.ttsSettingsService = ttsSettingsService;
     }
 
     @GetMapping
     public String adminPage(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
+        model.addAttribute("ttsSettings", ttsSettingsService.getSettings());
+        model.addAttribute("voices", Voice.values());
         return "admin";
     }
 
@@ -119,6 +129,12 @@ public class AdminController {
 
         redirectAttributes.addFlashAttribute("success", "Password updated successfully.");
         return "redirect:/admin/edit-user?id=" + userId;
+    }
+
+    @PostMapping("/settings")
+    public String saveSettings(@ModelAttribute("ttsSettings") TTSSettings ttsSettings) {
+        ttsSettingsService.updateSettings(ttsSettings.getVoiceName(), ttsSettings.getLanguage());
+        return "redirect:/admin";
     }
 
     @DeleteMapping("/users/{id}")

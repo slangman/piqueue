@@ -1,7 +1,9 @@
 package kz.hustle.equeue.repository;
 
+import kz.hustle.equeue.entity.Language;
 import kz.hustle.equeue.entity.Operator;
 import kz.hustle.equeue.entity.User;
+import kz.hustle.equeue.entity.TTSSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,9 @@ public class DataInitializer {
 
     @Autowired
     private OperatorRepository operatorRepository;
+
+    @Autowired
+    private TTSSettingsRepository ttsSettingsRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -45,6 +50,14 @@ public class DataInitializer {
             operator.setUser(user);
 
             operatorRepository.save(operator);
+        }
+
+        if (ttsSettingsRepository.findAll().isEmpty()) {
+            TTSSettings voiceSettings = new TTSSettings();
+            voiceSettings.setProvider("MaryTTS");
+            voiceSettings.setVoiceName("cmu_rms_hsmm");
+            voiceSettings.setLanguage(Language.EN);
+            ttsSettingsRepository.save(voiceSettings);
         }
     }
 

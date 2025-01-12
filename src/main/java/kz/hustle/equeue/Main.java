@@ -1,5 +1,7 @@
 package kz.hustle.equeue;
 
+import marytts.LocalMaryInterface;
+import marytts.exceptions.MaryConfigurationException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +11,7 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 @SpringBootApplication
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MaryConfigurationException {
         System.setProperty("java.awt.headless", "false");
         SpringApplication.run(Main.class, args);
     }

@@ -2,6 +2,9 @@ package kz.hustle.equeue;
 
 import kz.hustle.equeue.entity.Terminal;
 import kz.hustle.equeue.service.UserService;
+import kz.hustle.equeue.service.tts.MaryTTSProvider;
+import kz.hustle.equeue.service.tts.TTSProvider;
+import marytts.exceptions.MaryConfigurationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,4 +26,5 @@ public class AppConfig {
         swingUI.createAndShowGUI(); // Отображаем окно при старте приложения
         return swingUI;
     }
+
 }
