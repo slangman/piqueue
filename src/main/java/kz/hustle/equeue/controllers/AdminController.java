@@ -2,8 +2,12 @@ package kz.hustle.equeue.controllers;
 
 import kz.hustle.equeue.entity.*;
 import kz.hustle.equeue.service.OperatorService;
+import kz.hustle.equeue.service.TTSBeanManager;
 import kz.hustle.equeue.service.TTSSettingsService;
 import kz.hustle.equeue.service.UserService;
+import kz.hustle.equeue.service.tts.GoogleTTSProvider;
+import kz.hustle.equeue.service.tts.MaryTTSProvider;
+import marytts.exceptions.MaryConfigurationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,37 +17,42 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
     private final UserService userService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final OperatorService operatorService;
-
     private final TTSSettingsService ttsSettingsService;
+    private final TTSBeanManager ttsBeanManager;
 
     public AdminController(UserService userService,
                            PasswordEncoder passwordEncoder,
                            OperatorService operatorService,
-                           TTSSettingsService ttsSettingsService) {
+                           TTSSettingsService ttsSettingsService,
+                           TTSBeanManager ttsBeanManager) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.operatorService = operatorService;
         this.ttsSettingsService = ttsSettingsService;
+        this.ttsBeanManager = ttsBeanManager;
     }
 
     @GetMapping
-    public String adminPage(Model model) {
+    public String adminPage(Model model) throws MaryConfigurationException, IOException {
         List<User> users = userService.getAllUsers();
+        TTSSettings ttsSettings = ttsSettingsService.getSettings();
+        Map<String, List<Language>> providerLanguages = new HashMap<>();
+        providerLanguages.put("MaryTTS", new MaryTTSProvider().getAvailableLanguages());
+        providerLanguages.put("GoogleTTS", new GoogleTTSProvider().getAvailableLanguages());
+        model.addAttribute("providerLanguages", providerLanguages);
         model.addAttribute("users", users);
-        model.addAttribute("ttsSettings", ttsSettingsService.getSettings());
-        model.addAttribute("voices", Voice.values());
+        model.addAttribute("ttsSettings", ttsSettings);
+        model.addAttribute("voices", ttsSettingsService.getVoices(ttsSettings.getProvider(), ttsSettings.getLanguage()));
         return "admin";
     }
 
@@ -132,10 +141,27 @@ public class AdminController {
     }
 
     @PostMapping("/settings")
-    public String saveSettings(@ModelAttribute("ttsSettings") TTSSettings ttsSettings) {
-        ttsSettingsService.updateSettings(ttsSettings.getVoiceName(), ttsSettings.getLanguage());
+    public String saveSettings(@ModelAttribute("ttsSettings") TTSSettings ttsSettings) throws IOException {
+        ttsSettingsService.updateSettings(ttsSettings);
+        ttsBeanManager.recreateTtsProviderBean(); // Recreate the bean
         return "redirect:/admin";
     }
+
+
+    @GetMapping("/voices")
+    public ResponseEntity<List<String>> getVoices(
+            @RequestParam String provider,
+            @RequestParam String language
+    ) {
+        List<String> voices = null;
+        try {
+            voices = ttsSettingsService.getVoices(provider, language);
+        } catch (MaryConfigurationException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok(voices);
+    }
+
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {

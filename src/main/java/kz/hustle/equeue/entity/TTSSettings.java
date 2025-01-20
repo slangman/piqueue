@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "TTS_SETTINGS")
 public class TTSSettings {
 
     @Id
@@ -14,8 +15,7 @@ public class TTSSettings {
 
     private String voiceName;
 
-    @Enumerated(EnumType.STRING)
-    private Language language;
+    private String language;
 
     private LocalDateTime lastUpdated;
 
@@ -43,11 +43,11 @@ public class TTSSettings {
         this.voiceName = voiceName;
     }
 
-    public Language getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
-    public void setLanguage(Language language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 

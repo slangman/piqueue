@@ -105,25 +105,45 @@
     <div class="row">
         <form method="post" action="/admin/settings" th:object="${ttsSettings}">
             <div class="p-2">
-                <h4>Language settings</h4>
-                <p>Announcement language</p>
-                <!--
-                <select class="form-select" aria-label="Default select example" th:field="*{language}">
-                    <option selected>Select language</option>
-                    <option value="1">Kazakh</option>
-                    <option value="2">English</option>
-                    <option value="3">Russian</option>
+
+                <h4 th:text="#{admin.voice_settings}">Language settings</h4>
+
+                <p>Speech provider</p>
+                <select class="form-select"
+                        aria-lable="Select speech provider"
+                        id="speech-provider"
+                        name="speech-provider"
+                        th:field="*{provider}"
+                        onchange="updateLanguageOptions()">
+                    <option th:each="provider : ${providerLanguages.keySet()}"
+                            th:value="${provider}" th:text="${provider}"
+                            th:selected="${ttsSettings.provider == provider}">
+                    </option>
                 </select>
-                -->
-                <p>Voice</p>
-                <select class="form-select" aria-label="Select voice" id="select-voice" name="select-voice" th:field="*{voiceName}">
+
+                <p th:text="#{admin.announcement_language}">Announcement language</p>
+                <select class="form-select"
+                        aria-label="Announcement language"
+                        id="announcement-language"
+                        name="announcement-language"
+                        th:field="*{language}">
+                    <option th:each="lang : ${providerLanguages.get(ttsSettings.provider)}"
+                            th:value="${lang.name}"
+                            th:text="${lang.displayName}"
+                            th:selected="${ttsSettings.language == lang.name}">
+                    </option>
+                </select>
+
+                <p th:text="#{admin.announcement_voice}">Voice</p>
+                <select class="form-select"
+                        aria-label="Select voice"
+                        id="select-voice"
+                        name="select-voice"
+                        th:field="*{voiceName}">
                     <option th:each="voice : ${voices}"
-                            th:value="${voice.voiceName}"
-                            th:text="${voice.title}"
-                            th:selected="${voice.voiceName == ttsSettings.voiceName}"></option>
-                    <!--<option selected>Select voice</option>-->
-                    <!--<option value="1">Henry</option>-->
-                    <!--<option value="2">Poppy</option>-->
+                            th:value="${voice}"
+                            th:text="${voice}"
+                            th:selected="${voice == ttsSettings.voiceName}"></option>
                 </select>
             </div>
             <div class="wrap">
@@ -140,6 +160,83 @@
     }
     /*]]>*/
 </script>
+
+<script th:inline="javascript">
+    const providerLanguages = /*[[${providerLanguages}]]*/ {};
+    function updateLanguageOptions() {
+        const providerSelect = document.getElementById('speech-provider');
+        const languageSelect = document.getElementById('announcement-language');
+
+        const selectedProvider = providerSelect.value;
+
+        languageSelect.innerHTML = '';
+
+        const languages = providerLanguages[selectedProvider] || [];
+
+        languages.forEach(language => {
+            const option = document.createElement('option');
+            option.value = language.name;
+            option.text = language.displayName;
+            languageSelect.appendChild(option);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateLanguageOptions();
+    });
+</script>
+
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        const providerSelect = document.getElementById("speech-provider");
+        const languageSelect = document.getElementById("announcement-language");
+        const voiceSelect = document.getElementById("select-voice");
+
+        // Function to fetch voices
+        async function fetchVoices(provider, language) {
+            try {
+                const response = await fetch(`/admin/voices?provider=${provider}&language=${language}`);
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    console.error("Failed to fetch voices");
+                    return [];
+                }
+            } catch (error) {
+                console.error("Error fetching voices:", error);
+                return [];
+            }
+        }
+
+        // Update voices dynamically
+        async function updateVoices() {
+            const provider = providerSelect.value;
+            const language = languageSelect.value;
+
+            if (provider && language) {
+                const voices = await fetchVoices(provider, language);
+
+                // Clear the voice dropdown
+                voiceSelect.innerHTML = `<option value="" disabled selected>Select a voice</option>`;
+
+                // Populate with new voices
+                voices.forEach(voice => {
+                    const option = document.createElement("option");
+                    option.value = voice;
+                    option.textContent = voice;
+                    voiceSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Attach event listeners
+        providerSelect.addEventListener("change", updateVoices);
+        languageSelect.addEventListener("change", updateVoices);
+    });
+</script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
