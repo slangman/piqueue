@@ -1,6 +1,5 @@
 package kz.hustle.equeue.service;
 
-import kz.hustle.equeue.entity.Language;
 import kz.hustle.equeue.entity.TTSSettings;
 import kz.hustle.equeue.repository.TTSSettingsRepository;
 import kz.hustle.equeue.service.tts.GoogleTTSProvider;
@@ -52,7 +51,7 @@ public class TTSSettingsService {
 
 
     public List<String> getVoices(String provider, String language) throws MaryConfigurationException, IOException {
-        TTSProvider ttsProvider = null;
+        TTSProvider ttsProvider;
         switch (provider) {
             case "MaryTTS":
                 ttsProvider = new MaryTTSProvider();

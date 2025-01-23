@@ -1,6 +1,5 @@
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
     id 'java'
@@ -33,9 +32,7 @@ repositories {
     }
 }
 
-// Define the URL of the ZIP file in GitHub releases
-def maryttsHenryVoiceReleaseUrl = "https://github.com/marytts/voice-cmu-rms-hsmm/releases/download/v5.2/voice-cmu-rms-hsmm-5.2.zip"
-
+//TODO: Exclude .map files from build
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

@@ -143,7 +143,7 @@ public class AdminController {
     @PostMapping("/settings")
     public String saveSettings(@ModelAttribute("ttsSettings") TTSSettings ttsSettings) throws IOException {
         ttsSettingsService.updateSettings(ttsSettings);
-        ttsBeanManager.recreateTtsProviderBean(); // Recreate the bean
+        ttsBeanManager.recreateTtsProviderBean();
         return "redirect:/admin";
     }
 
@@ -153,7 +153,7 @@ public class AdminController {
             @RequestParam String provider,
             @RequestParam String language
     ) {
-        List<String> voices = null;
+        List<String> voices;
         try {
             voices = ttsSettingsService.getVoices(provider, language);
         } catch (MaryConfigurationException | IOException e) {

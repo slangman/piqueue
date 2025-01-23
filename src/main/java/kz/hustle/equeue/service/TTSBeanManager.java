@@ -7,8 +7,6 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 @Service
 public class TTSBeanManager {
 
@@ -22,18 +20,13 @@ public class TTSBeanManager {
         try {
             DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) context.getBeanFactory();
 
-            // Remove the existing bean
             if (beanFactory.containsSingleton("tts")) {
                 beanFactory.destroySingleton("tts");
             }
 
-            // Recreate the bean
             TTSProvider newProvider = context.getBean(TTSConfig.class).tts(
                     context.getBean(TTSSettingsRepository.class)
             );
-
-            // Register the new bean
-            //beanFactory.registerSingleton("tts", newProvider);
 
             System.out.println("TTS Provider bean recreated successfully.");
         } catch (Exception e) {
