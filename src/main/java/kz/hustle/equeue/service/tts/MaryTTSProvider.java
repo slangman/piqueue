@@ -20,6 +20,21 @@ public class MaryTTSProvider implements TTSProvider {
     }
 
     @Override
+    public String getName() {
+        return "MaryTTS";
+    }
+
+    @Override
+    public String getVoiceName() {
+        return maryTTS.getVoice();
+    }
+
+    @Override
+    public String getLanguageCode() {
+        return maryTTS.getLocale().toLanguageTag();
+    }
+
+    @Override
     public void setLocale(Locale locale) {
         maryTTS.setLocale(locale);
     }

@@ -4,6 +4,8 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.texttospeech.v1.*;
 import com.google.protobuf.ByteString;
 import kz.hustle.equeue.entity.Language;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
@@ -21,6 +23,8 @@ public class GoogleTTSProvider implements TTSProvider {
 
     private TextToSpeechSettings settings;
 
+    private static final Logger logger = LoggerFactory.getLogger(GoogleTTSProvider.class);
+
     //TODO: Hardcode, fix
     private final String GOOGLE_CREDENTIALS_FILE = "c:/work/custom-router-443713-t5-80c81ccab6e2.json";
 
@@ -28,6 +32,21 @@ public class GoogleTTSProvider implements TTSProvider {
         settings = TextToSpeechSettings.newBuilder()
                 .setCredentialsProvider(() -> GoogleCredentials.fromStream(new FileInputStream(GOOGLE_CREDENTIALS_FILE)))
                 .build();
+    }
+
+    @Override
+    public String getName() {
+        return "GoogleTTS";
+    }
+
+    @Override
+    public String getVoiceName() {
+        return voiceName;
+    }
+
+    @Override
+    public String getLanguageCode() {
+        return languageCode;
     }
 
     @Override
@@ -146,7 +165,7 @@ public class GoogleTTSProvider implements TTSProvider {
 
             // Start playing the clip
             clip.start();
-            System.out.println("Playing audio...");
+            logger.info("Playing audio...");
 
             // Block the main thread until the clip finishes playing
             while (!clip.isRunning()) {

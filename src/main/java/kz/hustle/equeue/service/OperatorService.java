@@ -2,6 +2,9 @@ package kz.hustle.equeue.service;
 
 import kz.hustle.equeue.entity.Operator;
 import kz.hustle.equeue.repository.OperatorRepository;
+import kz.hustle.equeue.service.tts.GoogleTTSProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +16,7 @@ public class OperatorService {
 
     private final OperatorRepository operatorRepository;
     private final HustleQueueService queueService;
+    private static final Logger logger = LoggerFactory.getLogger(OperatorService.class);
 
     public OperatorService(OperatorRepository operatorRepository, HustleQueueService queueService) {
         this.operatorRepository = operatorRepository;
@@ -36,18 +40,22 @@ public class OperatorService {
         Integer next = queueService.getNext();
         if (next != null) {
             operator.setCurrentClientNumber(next);
-            System.out.println("Client with number " + next + " please proceed to operator " + operator.getUser().getDisplayName());
+            logger.info("Client with number {} has been called to the operator {}",
+                    next,
+                    operator.getUser().getDisplayName());
             saveOperator(operator);
         } else {
-            System.out.println("No new clients in the queue");
+            logger.info("Operator called the next client but there are no new clients in the queue.");
         }
     }
 
     public void callCurrentClient(Operator operator) {
         if (operator.getCurrent() == null) {
-            System.out.println("Client queue is empty");
+            logger.info("Operator called the current client but the queue is empty.");
         } else {
-            System.out.println("Repeat: Client with number " + operator.getCurrent() + " please proceed to operator " + operator.getUser().getDisplayName());
+            logger.info("Client with number {} has been repeatedly called to the operator {}",
+                    operator.getCurrent(),
+                    operator.getUser().getDisplayName());
         }
     }
 }

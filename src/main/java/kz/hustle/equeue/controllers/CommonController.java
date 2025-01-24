@@ -2,7 +2,10 @@ package kz.hustle.equeue.controllers;
 
 import kz.hustle.equeue.entity.*;
 import kz.hustle.equeue.service.OperatorService;
+import kz.hustle.equeue.service.TerminalService;
 import kz.hustle.equeue.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +32,8 @@ public class CommonController {
 
     private final PasswordEncoder passwordEncoder;
 
+    private static final Logger logger = LoggerFactory.getLogger(TerminalService.class);
+
     public CommonController(UserService userService, OperatorService operatorService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.operatorService = operatorService;
@@ -42,10 +47,8 @@ public class CommonController {
 
     @GetMapping("/")
     public String mainPage(Locale locale) {
-        System.out.println("Current locale: " + locale);
-
+        logger.info("Opening main page. Current locale: " + locale);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         // Check if the user is authenticated and has the ROLE_ADMIN authority
         if (authentication != null && authentication.isAuthenticated() &&
                 authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {

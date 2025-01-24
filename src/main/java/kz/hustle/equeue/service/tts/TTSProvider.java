@@ -7,6 +7,12 @@ import java.util.Locale;
 import java.util.Set;
 
 public interface TTSProvider {
+    String getName();
+
+    String getVoiceName();
+
+    String getLanguageCode();
+
     void setLocale(Locale locale);
 
     void setVoiceName(String voiceName);

@@ -64,7 +64,6 @@ public class OperatorController {
 
     private void displayNotification(Operator operator) {
         swingApp.updateLabel("Клиент " + operator.getCurrent() + ", окно " + operator.getUser().getDisplayName());
-        System.out.println("TTS Voice: ");
         TTSProvider tts = applicationContext.getBean(TTSProvider.class);
         tts.generateAndPlayAudio("Client " + operator.getCurrent() + " please proceed to the window " + operator.getUser().getDisplayName());
     }
