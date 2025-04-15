@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="#{create_user.page_title} + ' - piQueue'">Create Operator</title>
@@ -38,7 +39,8 @@
                     <div th:if="${#fields.hasErrors('displayName')}" th:errors="*{displayName}"></div>
                 </div>
                 <div class="mb-0">
-                    <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#changePasswordModal" th:text="#{profile.change_password}">Change password
+                    <button type="button" class="btn btn-light" data-bs-toggle="modal"
+                            data-bs-target="#changePasswordModal" th:text="#{profile.change_password}">Change password
                     </button>
                 </div>
                 <div class="wrap">
@@ -49,27 +51,35 @@
     </div>
 
     <!--Change password modal-->
-    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="profile.change_password">Update password</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="profile.change_password">Update
+                        password</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="${isAdmin} ? @{/admin/update-user-password} : @{/update-password}" th:object="${passwordUpdate}" method="post">
+                    <form th:action="${isAdmin} ? @{/admin/update-user-password} : @{/update-password}"
+                          th:object="${passwordUpdate}" method="post">
                         <input type="hidden" name="userId" th:value="${passwordUpdate.userId}">
                         <div th:unless="${isAdmin}" class="mb-3">
-                            <label for="current-password" class="col-form-label" th:text="#{profile.current_password}">Current Password</label>
-                            <input type = password class="form-control" id="current-password" th:field="*{currentPassword}">
+                            <label for="current-password" class="col-form-label" th:text="#{profile.current_password}">Current
+                                Password</label>
+                            <input type=password class="form-control" id="current-password"
+                                   th:field="*{currentPassword}">
                         </div>
                         <div class="mb-3">
-                            <label for="new-password" class="col-form-label" th:text="#{profile.new_password}">New Password</label>
+                            <label for="new-password" class="col-form-label" th:text="#{profile.new_password}">New
+                                Password</label>
                             <input type="password" class="form-control" id="new-password" th:field="*{newPassword}">
                         </div>
                         <div class="mb-3">
-                            <label for="confirm-new-password" class="col-form-label" th:text="#{profile.confirm_new_password}">Confirm New Password</label>
-                            <input type="password" class="form-control" id="confirm-new-password" th:field="*{confirmNewPassword}">
+                            <label for="confirm-new-password" class="col-form-label"
+                                   th:text="#{profile.confirm_new_password}">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirm-new-password"
+                                   th:field="*{confirmNewPassword}">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
